@@ -1,3 +1,5 @@
+<!-- force rebuild -->
+
 /status-page
 ├── uptimeLogger.js          ← Node script to check sites
 ├── uptime-log.json          ← (initially blank: `{}`)
