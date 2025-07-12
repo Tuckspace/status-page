@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Status Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: sans-serif; background: #f4f4f4; padding: 2rem; }
+    h1 { text-align: center; }
+    canvas { max-width: 100%; margin: 2rem auto; display: block; }
+  </style>
+</head>
+<body>
+  <h1>Website Status Dashboard</h1>
+  <div id="charts"></div>
+
+  <script>
+    fetch('uptime-log.json')
+      .then(res => res.json())
+      .then(logs => {
+        const container = document.getElementById('charts');
+        for (const site in logs) {
+          const data = logs[site];
+          const chart = document.createElement('canvas');
+          container.appendChild(chart);
+
+          new Chart(chart, {
+            type: 'bar',
+            data: {
+              labels: data.map(d => new Date(d.timestamp).toLocaleDateString()),
+              datasets: [{
+                label: site,
+                data: data.map(d => d.ok ? 100 : 0),
+                backgroundColor: data.map(d => d.ok ? '#4CAF50' : '#F44336'),
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  max: 100,
+                  min: 0,
+                  title: { display: true, text: 'Status (%)' }
+                }
+              }
+            }
+          });
+        }
+      });
+  </script>
+</body>
+</html>
